@@ -45,7 +45,12 @@
 </nav>
 
 <div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
         <div class="page-header">
             <h4 class="fw-bold mb-0">상품 목록</h4>
             <small class="text-muted">총 <span th:text="${productPage.totalElements}"></span>개 상품
@@ -71,7 +76,8 @@
             <div th:if="${productPage.isEmpty()}" class="text-center py-5 text-muted">
                 <p class="mb-0">검색 결과가 없습니다.</p>
             </div>
-            <div th:unless="${productPage.isEmpty()}" class="table-responsive">                <table class="table table-hover mb-0 align-middle">
+            <div th:unless="${productPage.isEmpty()}" class="table-responsive">
+                <table class="table table-hover mb-0 align-middle">
                     <thead>
                         <tr>
                             <th class="ps-4" style="width:60px">#</th>
@@ -103,12 +109,17 @@
                             </td>
                             <td class="text-center text-muted small"
                                 th:text="${#temporals.format(p.createdAt, 'yyyy-MM-dd')}"></td>
-                            <td class="text-center" sec:authorize="hasRole('ADMIN')">
+                        <td class="text-center" sec:authorize="hasRole('ADMIN')">
+                            <div class="d-flex justify-content-center gap-2">
+                                <a th:href="@{/products/{id}/edit(id=${p.id})}"
+                                   class="btn btn-outline-primary btn-sm">수정</a>
+
                                 <form th:action="@{/products/{id}/delete(id=${p.id})}" method="post"
                                       onsubmit="return confirm('삭제하시겠습니까?')">
                                     <button class="btn btn-outline-danger btn-sm">삭제</button>
                                 </form>
-                            </td>
+                            </div>
+                        </td>
                         </tr>
                     </tbody>
                 </table>
